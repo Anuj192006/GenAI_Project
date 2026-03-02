@@ -1,7 +1,7 @@
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
-import time
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -107,10 +107,13 @@ hr {
 # ─── Train Model (cached so it only runs once per session) ─────────────────────
 @st.cache_resource(show_spinner=False)
 def train_model():
-    df = pd.read_csv("7 churn.csv")
+    # Resolve CSV path relative to this script so it works both locally and on Streamlit Cloud
+    csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "7 churn.csv")
+    df = pd.read_csv(csv_path)
     df = df.drop(columns=["customerID"])
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
-    df["TotalCharges"].fillna(df["TotalCharges"].mean(), inplace=True)
+    # Use assignment instead of inplace=True (deprecated in newer pandas)
+    df["TotalCharges"] = df["TotalCharges"].fillna(df["TotalCharges"].mean())
     df["Churn"] = df["Churn"].map({"Yes": 1, "No": 0})
 
     categorical_cols = df.select_dtypes(include="object").columns.tolist()
