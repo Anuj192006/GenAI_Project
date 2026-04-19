@@ -72,7 +72,12 @@ class RAGRetriever:
             
             # Create case metadata
             churn_outcome = predictions[idx] == 1
-            churn_prob = probabilities[idx][1]
+            
+            # Handle both 1D and 2D probability arrays
+            if probabilities.ndim > 1:
+                churn_prob = probabilities[idx][1]
+            else:
+                churn_prob = probabilities[idx]
             
             case = {
                 "customer_features": customer_dict,

@@ -63,7 +63,8 @@ def initialize_system():
             vector_store = VectorStore(embedding_gen.get_embedding_dim())
             df = pd.read_csv(DATA_FILE)
             rag_tmp = RAGRetriever(embedding_gen, vector_store)
-            rag_tmp.build_knowledge_base(df.head(1000), np.zeros(1000), np.zeros(1000), sample_size=500)
+            # Use 2D array for probabilities (1000, 2) to avoid indexing errors
+            rag_tmp.build_knowledge_base(df.head(1000), np.zeros(1000), np.zeros((1000, 2)), sample_size=500)
             vector_store.save(str(VECTOR_INDEX), str(METADATA_DB))
         
         rag_retriever = RAGRetriever(embedding_gen, vector_store)
