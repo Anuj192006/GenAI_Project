@@ -1,175 +1,183 @@
-# 🛡️ ChurnPredictor AI — Telco Customer Churn Prediction
-
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://anuj192006-genai-project-app-7glevr.streamlit.app)
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2%2B-orange.svg)](https://scikit-learn.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
-> An end-to-end Machine Learning web application that predicts whether a telecom customer is likely to churn, built with **Logistic Regression**, **Decision Tree**, and deployed via **Streamlit**.
+# 🛡️ ChurnPredictor AI
+### Enterprise-Grade Customer Retention Intelligence Platform
+> **End-Semester GenAI & Agentic AI Project**  
+> RAG · LangChain · Groq / Llama-3.1 · FAISS · scikit-learn · Streamlit
 
 ---
 
-## 📌 Table of Contents
-- [Overview](#-overview)
-- [Live Demo](#-live-demo)
-- [Dataset](#-dataset)
-- [Project Structure](#-project-structure)
-- [Models Used](#-models-used)
-- [Results](#-results)
-- [Tech Stack](#-tech-stack)
-- [How to Run Locally](#-how-to-run-locally)
-- [Features](#-features)
-- [Team](#-team)
+## 📌 Overview
 
----
-
-## 🔍 Overview
-
-Customer churn — when a customer stops using a service — is one of the biggest challenges for telecom companies. Retaining an existing customer is **5× cheaper** than acquiring a new one.
-
-This project builds a machine learning pipeline to:
-1. **Analyze** customer demographics, service usage, and billing patterns
-2. **Predict** the probability of a customer churning
-3. **Recommend** personalized retention strategies based on the prediction
-
----
-
-## 🚀 Live Demo
-
-👉 **[Click here to try the app live on Streamlit Cloud](https://anuj192006-genai-project-app-7glevr.streamlit.app)**
-
----
-
-## 📊 Dataset
-
-| Property | Details |
-|---|---|
-| **Source** | Telco Customer Churn Dataset (`7 churn.csv`) |
-| **Records** | 7,043 customers |
-| **Features** | 20 (demographics, services, billing) |
-| **Target** | `Churn` — Yes / No |
-
-### Key Features Used:
-- **Demographics**: Gender, SeniorCitizen, Partner, Dependents
-- **Services**: PhoneService, MultipleLines, InternetService, StreamingTV, etc.
-- **Billing**: Contract type, PaymentMethod, MonthlyCharges, TotalCharges
-- **Account Info**: Tenure (months with the company)
-
-> **Preprocessing**:
-> - `TotalCharges` converted to numeric; missing values filled with column mean
-> - All categorical columns label-encoded
-> - Numerical features standardized with `StandardScaler`
-
----
-
-## 📁 Project Structure
-
-```
-GenAi_Project/
-│
-├── app.py                    # 🌐 Streamlit web application (main entry point)
-├── telco_churn_model.py      # 🧠 Model training script (standalone Python)
-├── telco_churn_model.ipynb   # 📓 Jupyter Notebook — exploration & analysis
-├── 7 churn.csv               # 📦 Raw dataset
-├── requirements.txt          # 📋 Python dependencies
-└── Readme.md                 # 📖 This file
-```
-
----
-
-## 🧠 Models Used
-
-### 1. Logistic Regression
-- A statistical model that estimates the probability of churn using a linear decision boundary.
-- `max_iter=1000`, `random_state=42`
-- Best suited for linearly separable data and interpretable predictions.
-
-### 2. Decision Tree Classifier
-- A tree-based model that splits data on feature thresholds to make predictions.
-- `random_state=42`
-- Captures non-linear relationships in customer behavior.
-
-Both models are trained using an **80/20 train-test split** with `StandardScaler` normalization.
-
----
-
-## 📈 Results
-
-| Model | Accuracy | Precision | Recall | F1 Score |
-|---|---|---|---|---|
-| **Logistic Regression** | **82%** | **68%** | **58%** | **63%** |
-| Decision Tree | 73% | 48% | 51% | 50% |
-
-✅ **Logistic Regression outperforms** Decision Tree across all metrics and is used as the default model in the app.
-
----
-
-## 🛠️ Tech Stack
+**ChurnPredictor AI** is an end-to-end **Agentic AI** system that predicts telecom customer churn and autonomously generates personalised retention strategies using:
 
 | Layer | Technology |
 |---|---|
-| Language | Python 3.9+ |
-| ML Framework | scikit-learn |
-| Data Processing | pandas, numpy |
-| Web App | Streamlit |
-| Deployment | Streamlit Cloud |
+| **ML Prediction** | Logistic Regression + Decision Tree (scikit-learn) |
+| **RAG** | FAISS vector store + `all-MiniLM-L6-v2` sentence embeddings |
+| **LLM** | Groq / **Llama-3.1-8b-instant** via LangChain |
+| **Agentic Layer** | `RetentionAgent` orchestrates ML → RAG → LLM pipeline |
+| **Frontend** | Streamlit with dark theme, Plotly gauges, session state |
 
 ---
 
-## ⚙️ How to Run Locally
+## 🏗️ Architecture
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Anuj192006/GenAI_Project.git
-cd GenAI_Project
+```
+app.py                          ← Streamlit entry point
+├── agent/
+│   ├── retention_agent.py      ← Agentic AI core (LangChain + Groq)
+│   └── prompts.py              ← LangChain PromptTemplate definitions
+├── ml_pipeline/
+│   ├── preprocessing.py        ← LabelEncoder + StandardScaler pipeline
+│   ├── model_trainer.py        ← Train LR + DT, save to .pkl
+│   └── prediction.py           ← ModelLoader + ChurnPredictor
+├── rag/
+│   ├── embeddings.py           ← Sentence Transformer embedding generator
+│   ├── vector_store.py         ← FAISS IndexFlatL2 wrapper
+│   └── retriever.py            ← k-NN similarity search + KB builder
+├── ui/
+│   └── components.py           ← All Streamlit UI components
+├── utils/
+│   ├── config.py               ← Paths, feature lists, model config
+│   └── helpers.py              ← Logging, risk levels, formatters
+├── data/
+│   └── telco_churn.csv         ← IBM Telco Customer Churn dataset
+└── models/
+    └── churn_model.pkl         ← Trained models + fitted preprocessor
 ```
 
-### 2. Install Dependencies
+---
+
+## ⚙️ Setup
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/<your-username>/GenAi_Project.git
+cd GenAi_Project
+```
+
+### 2. Create a virtual environment
+```bash
+python3 -m venv venv
+source venv/bin/activate     # macOS / Linux
+# venv\Scripts\activate      # Windows
+```
+
+### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Run the Streamlit App
+### 4. Configure environment variables
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and add your **Groq API key** (free at [console.groq.com](https://console.groq.com)):
+
+```env
+GROQ_API_KEY=gsk_your_key_here
+```
+
+> **No key?** The app still runs in rule-based fallback mode. The LLM panel simply won't appear.
+
+---
+
+## 🚀 Running the App
+
+### (Optional) Pre-train models
+```bash
+python train.py
+```
+> Trains models and builds FAISS knowledge base. Skippable — `app.py` trains automatically on first run if `models/churn_model.pkl` is missing.
+
+### Launch Streamlit
 ```bash
 streamlit run app.py
 ```
+Open **http://localhost:8501**
 
-The app will open at `http://localhost:8501` in your browser.
+---
 
-### 4. (Optional) Run the Training Script
-```bash
-python telco_churn_model.py
+## 🧠 Agentic Workflow
+
 ```
-This trains the model and saves `telco_churn_model.pkl`.
+User Input (Customer Profile)
+        │
+        ▼
+ChurnPredictor.predict()           ← scikit-learn ML inference
+        │  prediction + probability
+        ▼
+RetentionAgent.analyze_churn_risk()
+        ├── _extract_risk_factors()      ← deterministic feature analysis
+        ├── RAGRetriever.retrieve(k=5)   ← FAISS k-NN: similar historical cases
+        └── LLM call via LangChain
+                provider:  Groq
+                model:     llama-3.1-8b-instant
+                prompt:    customer_profile + risk_factors + RAG_cases
+                output:    root_cause + prioritised_actions + outcome_prediction
+        │
+        ▼
+Structured Results → Streamlit UI
+        ├── Risk gauge (Plotly Indicator)
+        ├── 🤖 LLM Reasoning panel (expandable)
+        ├── Priority-ranked retention recommendations
+        └── Similar RAG-retrieved historical cases
+```
 
 ---
 
-## ✨ Features
+## 📊 Model Performance (80/20 hold-out)
 
-- 🎯 **Dual Model Selection** — Switch between Logistic Regression and Decision Tree in the sidebar
-- 📊 **Live Metrics** — View Accuracy, Precision, Recall, F1 Score for each model in the sidebar
-- 🔥 **Churn Risk Prediction** — Get real-time churn probability with a confidence score
-- 💡 **Smart Recommendations** — Personalized retention or upsell strategies based on the result
-- 🎨 **Premium Dark UI** — Custom CSS with gradient accents, Google Fonts, and responsive layout
-- ☁️ **Self-contained** — No pre-built `.pkl` file needed; model trains from CSV on startup
+| Model | Accuracy | Precision | Recall | F1 |
+|---|---|---|---|---|
+| Logistic Regression | ~80% | ~67% | ~55% | ~60% |
+| Decision Tree | ~78% | ~60% | ~52% | ~56% |
 
 ---
 
-## 👥 Team
+## 🔑 Key Features
 
-This project was built as a collaborative group effort by:
-
-| Name |
-|---|
-| **Anuj Upadhyay** |
-| **Chaitanya Shekhawat** |
-| **Shaurya Sharma** |
-| **Tanishk Agarwal** |
-
-> B.Tech Students | AI & Machine Learning Project
-
-🔗 [Live App](https://anuj192006-genai-project-app-7glevr.streamlit.app) &nbsp;|&nbsp; [GitHub](https://github.com/Anuj192006/GenAI_Project)
+| Feature | Details |
+|---|---|
+| **LLM-powered recommendations** | Groq / Llama-3.1-8b-instant via LangChain |
+| **RAG similarity search** | FAISS + `all-MiniLM-L6-v2`, 500-1000 case KB |
+| **Agentic reasoning trace** | Full LLM reasoning shown in UI |
+| **Graceful degradation** | Rule-based fallback if no API key |
+| **Session persistence** | All results survive button clicks (st.session_state) |
+| **Batch prediction** | CSV upload → risk distribution + downloadable results |
+| **Dark-theme UI** | Plotly gauges, metric cards, expandable panels |
 
 ---
 
-> ⭐ If you found this project helpful, please give it a star!
+## 🌐 Deployment
+
+### Streamlit Community Cloud
+1. Push repo to GitHub
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+3. Connect repo → set `app.py` as entry point
+4. Add `GROQ_API_KEY` in Secrets (Settings → Secrets)
+
+### HuggingFace Spaces
+1. Create a new Space → **Streamlit** SDK
+2. Push code
+3. Add `GROQ_API_KEY` in Space Settings → Repository secrets
+
+---
+
+## 📦 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Streamlit ≥ 1.28 |
+| ML | scikit-learn (LR + DT), pandas, numpy |
+| LLM | LangChain + langchain-groq + Groq API (Llama-3.1-8b-instant) |
+| RAG | sentence-transformers, FAISS (faiss-cpu) |
+| Visualisation | Plotly |
+| Dataset | IBM Telco Customer Churn (7,043 records, 20 features) |
+
+---
+
+## 👤 Author
+
+**Anuj Upadhyay**  
+End-Semester GenAI & Agentic AI Project

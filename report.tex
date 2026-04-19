@@ -1,0 +1,80 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{ChurnPredictor AI: An Agentic Retention Platform using RAG and LLM-driven Reasoning\\
+{\footnotesize \textsuperscript{*}End-Semester GenAI \& Agentic AI Project}}
+
+\author{\IEEEauthorblockN{Anuj Upadhyay}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{University / Institute Name}\\
+City, Country \\
+Email: your.email@example.com}
+}
+
+\maketitle
+
+\begin{abstract}
+As customer churn remains a critical challenge in the telecommunications industry, traditional predictive models often lack the prescriptive depth required for effective retention. This paper presents \textbf{ChurnPredictor AI}, an autonomous agentic system that integrates Machine Learning (ML), Retrieval-Augmented Generation (RAG), and Large Language Models (LLMs) to identify at-risk customers and generate personalized retention strategies. By utilizing FAISS for similarity search over historical cases and Llama-3.1 via Groq for high-speed reasoning, the system provides a holistic intelligence layer that bridges the gap between churn prediction and customer retention execution.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Agentic AI, RAG, Churn Prediction, LangChain, FAISS, Customer Retention, Llama-3.1.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Customer churn represents a direct loss in revenue and market share. While standard Machine Learning models (e.g., Logistic Regression) excel at identifying "who" will churn, they rarely explain "why" or prescribe "how" to retain them. ChurnPredictor AI addresses this by implementing an Agentic Workflow that analyzes individual customer risk profiles, retrieves relevant historical outcomes using RAG, and generates human-like retention reports using the Llama-3.1 LLM.
+
+\section{System Architecture}
+The system is designed with a modular 4-layer architecture:
+
+\subsection{Predictive Layer}
+Standard scikit-learn models (Logistic Regression and Decision Trees) are trained on the IBM Telco Churn dataset. These models provide the initial churn probability and feature importance scores.
+
+\subsection{Retrieval layer (RAG)}
+To provide contextual intelligence, the system stores historical customer profiles and their retention outcomes in a FAISS vector database. When a new customer is analyzed, their profile is embedded using \texttt{all-MiniLM-L6-v2} and the Top-K (k=5) most similar past cases are retrieved.
+
+\subsection{Agentic Reasoning Layer}
+The \texttt{RetentionAgent} utilizes LangChain to orchestrate the workflow. It takes the ML prediction, RAG-retrieved historical cases, and deterministic risk factors (e.g., contract type, tenure) to form a structured prompt for the Groq-hosted Llama-3.1-8b-instant model.
+
+\subsection{Presentation Layer}
+A high-performance Streamlit dashboard provides visual analytics, including churn risk gauges, feature importance charts, and the AI's reasoning trace.
+
+\section{Technical Implementation}
+\subsection{RAG Pipeline}
+RAG is implemented using the \texttt{sentence-transformers} library for embedding customer vectors. Similarity search is performed using \texttt{FAISS} (IndexFlatL2), enabling low-latency retrieval of similar customer profiles from a knowledge base of 7,000+ records.
+
+\subsection{Agentic Workflow}
+The agent utilizes a "Prescriptive Reasoning" pattern. Unlike standard chatbots, the agent follows a deterministic preprocessing step to identify hard risk factors before passing them to the LLM. This ensures accuracy and reduces hallucination.
+
+\section{Results and Performance}
+\subsection{ML Model Accuracy}
+\begin{itemize}
+    \item \textbf{Logistic Regression:} 80.2\% Accuracy
+    \item \textbf{Decision Tree:} 78.5\% Accuracy
+\end{itemize}
+
+\subsection{Qualitative Analysis}
+The LLM successfully identifies root causes such as "Unresolved Fiber Optic Pricing Friction" and suggests specific targeted actions such as "Contract Upgrade Incentives," which were validated against the RAG-retrieved strategies.
+
+\section{Conclusion}
+ChurnPredictor AI demonstrates that GenAI and Agentic workflows can significantly enhance traditional business intelligence tools. By combining the precision of ML with the contextual depth of RAG and the reasoning power of LLMs, the platform provides a robust solution for telecom customer retention.
+
+\begin{thebibliography}{00}
+\bibitem{b1} LangChain Documentation, "Agents and Chains," https://python.langchain.com/
+\bibitem{b2} Facebook Research, "FAISS: A library for efficient similarity search," https://github.com/facebookresearch/faiss
+\bibitem{b3} Groq Cloud, "Llama-3 High Speed Inference," https://groq.com/
+\end{thebibliography}
+
+\end{document}
